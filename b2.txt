@@ -1,0 +1,780 @@
+Laravel:
+    + mo hinh mvc
+
+- Cai dat:
+    + composer: composer create-project --prefer-dist laravel/laravel:^7.0 blog
+    + laravel installer: composer global require laravel/installer
+    + Chay server: php artisan serve
+
+Cấu trúc thư mục
+-artisan: là một phần mềm viết bằng php:
+    + Công cụ để viết code laravel tiện hơn, nhanh hơn
+-app: 
+    + là thư mục viết code logic của app
+    - http:
+        + Controllers: 
+        + Middleware:
+    - Exceptions: xử lí lỗi
+    - Console: các file xử lí dòng lệnh
+    - Providers: 
+        + điểm kết nối Laravel với App của chúng ta
+
+-bootstrap: ít khi dùng với boostrap
+    - k phải bootstrap css framework
+    - chứa các file khởi động của laravel
+    - cache: file tạm: để đọc nhanh hơn
+
+- config: 
+    - Cấu hình:
+        - broadcasting: dùng cho realtime
+        - auth: dùng cho đăng nhập
+        - hash: mã hóa
+
+- database:
+    - Viết code xử lí database
+    - factories: file xử lý để tạo ra dữ liệu
+    - migrations: 
+        - file để tạo ra cơ sở dữ liệu
+    - seeds: tạo dữ liệu có sẵn như admin
+        - chứa các seeder: dữ liệu mẫu => có sẵn
+        - tin tức: danh mục có sẵn
+        - tạo admin: 
+
+- public:
+    - giống như thư mục dist ở npm
+    - là thư mục được người dùng truy cập vào
+    - giống như khi hosting firebase
+
+- resources:
+    - js:
+    - lang: language: ngôn ngữ
+    - sass: scss => css
+    - views: chứa các file html (blade template)
+
+- routes:
+    - chứa các routes:
+        + web.php: chứa các route cho web
+        + api.php: chứa các route cho api
+
+- storage: Bộ lưu trữ ( không cần để ý )
+    - cache:
+        ảnh nằm trong thư mục public của app
+        ở public có một mục shortcut link đến storage nên file public cũng truy cập được ảnh được lưu trữ trong storage
+    - logs: thư mục nơi chứa lỗi
+
+- tests: Chứa các test
+    - Tất cả ứng dụng chúng ta build thì phải vượt qua tất cả cái tests ở trong thư mục
+
+- vendor: giống node_modules
+.env: file cấu hình môi trường
+
+Mô hình mvc: model-view-controller
+    - Ứng dụng chia thành 3 phần:
+        + model: class, thực thể trong ứng dụng
+            + conVat, conVoi, conCho,...
+            + Article, category
+            * Là class ta tự đĩnh nghĩa ra, cho các class này tương tác với nhau
+        + controllers: xử lý 
+            + làm nhiệm vụ xử lý logic
+            + gọi các model lên
+        + view: hiển thị
+    
+    - Truy cập web:
+        + router:
+        + controller => model
+        + view
+
+    - static method:
+        + Gọi method của class mà k cần phải khởi tạo đối tượng
+
+    - Router:
+        + Route::[method]
+        + Route::get('đường dẫn', hàm xử lý)
+        + Route::get('đường dẫn', chuỗi)
+            Chuỗi: tên controller và method
+            ví dụ: Route::get('login', 'UserController@login')
+             Truy cập vào class UserCOntroller chạy hàm login
+        + Route::post()
+        + Route::put()
+        + Route::delete()
+        + Route group: Nhóm
+            + Route::group:([attributes], hàm xử lý)
+        + Route resource:
+            + Resource:
+                + Tai nguyen
+            + Route::resource('duong dan', 'controller resource')
+            + Neu dung use duong dan thi dung
+            ArticleController::class: lay ra full duong dan
+            + Resource Controller:
+                + la mot controller binh thuong
+                + co san cac ham: get(), edit(),update(),delete()
+        + Route view: tra ve view
+            VD: Route::view('/xinchao','xinchao');
+        + Route name: ten route
+
+- Artisan va cac lenh co ban:
+ + php artisan [caulenh]
+ + make:
+    make:controller (--resource)
+    make:model
+
+- Config: Configuration( cau hinh )
+    - .env 
+    - /config
+    Ham env(): 
+        - Lay bien moi truong
+            + Lay bien server trong may tinh cua ban truoc 
+            + Neu khong co t
+            hi lay bien trong file .env
+            + lay mac dinh o file config
+                Vd: config('APP_NAME','Laravel') nghia la no lay gia tri 'Laravel'
+    - Config thi duoc cachce (luu tam lai)
+    - php artisan config:clear => xoa cache
+    - php artisan config:cache: cache lai
+- Cu khi nao sua file .env hoac sua file trong config thi phai chay lenh nay
+    * php artisan config:cache: cache lai
+    Tu tao mot config:
+        + tao 1 file trong thu muc config
+    => thi cung phai chay lai lenh php artisan config:cache de cache lai
+
+- .env:
+    APP_KEY: dung de ma hoa mat khau, khong nen doi gia tri nay vi neu doi di se mat toan bo tai khoan ban dau
+
+- Request: la mot yeu cau tu nguoi dung len may chuỗi
+    + Bien Request luu tru du lieu duoi dang mang bao gom cookie,...
+    + La mot bien chua toan bo thong tin cua mot Request
+    + mac dinh se la Illuminate\Http\Request
+    + lay cac gia tri tu request
+    + $request->post(ten gia tri)
+    + $request->get('ten')
+
+- Tu tao 1 request
+    + php artisan make:request [ten request]
+    + Moi request => dam bao la hop le => den duoc controller
+
+Controller return view:
+    return view('ten view', [ tham so ])
+    hoac la view('ten view)->with([ mang tham so ])
+    neu nhu file blade.php trong 1 ten thu muc thi 
+    return view('ten thu muc.ten view')
+
++ Blade template:
+    + Template engine:
+        + Dich cac file dac biet => php thuan => cache
+    + Muon laravel chu dong cache => php artisan view:cache
++ Cac cau lenh co ban trong blade template:
+    + xuat mot bien: {{ $tenbien }}
+    + vong lap: 
+        @foreach($biens as $ bien)
+
+        @endforeach
+    + cau lenh dieu kien:
+        @if (dieu kien)
+
+        @else 
+
+        @endif
+
++ Ke thua template:
+    + o template cha su dung ham yield('ten section')
+    + o template con thi phai co @extends('ten file blade cha') va phan section('ten section') ket thuc bang @endsection mo dau bang @section('tensection')
+    Vi du:
+        @extends('master')
+        @section('noi dung')
+            @foreach($students as $student)
+                <p>{{ $student }}</p>
+            @endforeach
+            @if ($agree)
+                <p>Dong y</p>
+            @else
+                <p>Khong dong y</p>
+            @endif
+        @endsection
+    + Neu nhu ben trong la chuoi thi chi can @section('ten section', 'chuoi') k can @endsection
+
++ include('ten')
+
++ ket noi database:
+
++ migration:
+    + Cach de tao cau truc co so du lieu trong laravel
+    + php artisan make:migration [ten migration]
+    + create_tentb_table
+    Sau khi tao migration se nam trong thu muc database/migrations
+
++ Moi migration:
+    + up: tao bang
+    + down: xoa bang
+
++ Chay migration:
+    + php artisan migrate:
+        php artisan migrate
+
++ Rollback
+    + php artisan migrate:rollback
+     Luc nay ta lam gi thi gio no huy cai day
+    + Bang: migrations: chua toan bo lich su thao tac
+
++ Refresh:
+    + php artisan migrate:refresh
+    + xoa toan bo db => migrate lai
+
++ $table:
+    + id() => tao ra cot id => primary key
+    + string() => tao ra cot varchar
+    + string(ten cot , chieu dai ) => tao ra cot varchar(chieu dai)
+    VD: string('title', 60)
+    + integer => tao ra cot kieu int
+    + timestamps():
+        + created_at:
+        + updated_at:
+    + text(ten cot) => tao ra 1 cot kieu text
+    + date() => ngay
+    + dateTime() => ngay gio
+    + time() => gio 
+    + boolean() =>
+    + softDeletes() => deleted_at => luu thoi gian xoa
+    + index([ mang cac gia tri danh index ])
+    vd: 
+        $table->id();
+        $table->string('title');
+        $table->integer('views_count')->default(0);
+        $table->text('content');
+        $table->timestamps();
+        $table->index(['title','content']);
+    + default(value) => mac dinh la gia tri value, neu khong co gia tri thi value = 1
+    + unique() => khong the them 2 gia tri giong nhau vao 1 column
+    + nullable(): co the trong, luc nay no se set gia tri nullable
+
+    * khong de nullable voi unique()
+
+Soft delete => xoa mem
+
+He thong ngan hang
+
+=> xoa 1 giao dich => truy vet duoc
+Dung de bao mat he thong:
++ Mysql => tao ra user rieng => khong co quyen xoa trong database
++ du lieu khong the bi xoa
++ khi xoa => danh dau vao cot deleted_at
+=> them vao => khong the bi xoa(xoa vat ly)
++ index([ mang cac gia tri danh index ])
+Danh index:
+    + Doc nhanh
+    + Toc do ghi bi cham di
+Ten truy cap:
+
+
+
+    + Them cot: php artisan make:migration add_[author]_to_[articles]_table
+    Ben trong schema::table them:
+    $table->string([ten cot])->after([cot ban muon them vao sau]);
+
++ Seeder:
+    + Cong cu tao du lieu mau
+    + Admin user
+    + nam o thu muc database/seeds
+    + Chay seeder: 
+        + php artisan db:seed --class=[Ten class muon chay seed]
+        + php artisan db:seed => chay database seeder
+        + Doi khi php artisan db:seed k chay:
+            + composer dump-autoload: tao 1 file autoload khac
+
++ Faker:
+    La mot thu vien de tao du lieu mau
+
++ Model:
+    + mo hinh mvc:
+
++ Tao model:
+    + php artisan make:model [ten model] -m
+    Tu dong tao migration luon
+
++ ORM:
+    + object relation maping
++ Eloquent: (1 object tren code tuong ung voi 1 dong du lieu db)
+    + Mot dang model dac biet trong laravel
+    + model cua chung ta extends model trong namespace Eloquent
+    + Ham doc du lieu:
+        => Thuc hien doc xuong db
+        ========================================
+        => tra ve 1 object
+        + find(id) => tra ve 1 object chua tat cac cac cot
+        + findOrFail(id) => giong ham find(id) => neu khong ton tai thi bao loi
+            + findOr(function() {
+
+            })
+        + first() tra ve ban ghi dau tien thoa man dieu kien
+        + firstOrFail(): k ton tai thi bao loi giong nhu findOrFail() hoac firstOr(function () {})
+        + max('ten cot') => lay so nhieu nhat
+        + count(): dem
+
+        --------------------------------------------
+        -> Tra ve 1 collection(mang)
+        + all() => Tra ve tat ca du lieu
+        + paginate(so luong): phan trang
+            + show the a de bam sang trang moi:
+                VD: 
+                $articles = Article::paginate(15);
+                echo $articles->links();
+        + get() => lay tat ca => theo dieu kien
+            VD: $articles = Article::where('id',10)->get(); Lay dong co id = 10
+            * cach dung where giong nhu trong sql
+
+        => viet query
+
+        + where('cot','gia tri') chung ta co the dung whereCot vi du nhu whereTitle('gia tri')
+        nhu views_count thi se la whereViewsCount('gia tri')
+        + where('cot','so sanh', 'gia tri')
+            Vd where('title','like','%you%')
+               where('views_coun','>=',100)
+            => chung ta co the viet nhieu lan
+        + where([mang cac dieu kien])
+            Vd:         $articles = Article::where([
+            'id' => 10,
+            'title' => 'I used--and I.',
+        ])->get();
+        + limit(): va offset():
+            + Dat phai truoc get()
+        + take(): giong limit()
+        + orderBy('ten cot') => sap xep tang dan
+        + orderByDesc('ten cot') => sap xep giam (desc: decreasing)
+
+
++ Cac ham tao du lieu:
+
+    + tao 1 object => save xuong database
+        VD:         
+        Cach 1
+            $article = new Article;
+            $article->title="QWOIRPWQRJ";
+            $article->content = "oifasonflkasnfl";
+            $article->author = "dang";
+            $article->save();
+            // Thuc hien luu xuong db
+        Cach 2
+            $article = Article::create([
+                'title' => 'baiviet 4',
+                'content' => 'noidung 4',
+                'author' => 'Pham Minh Dang',
+            ]); // ghi truc tiep xuong db luon
+        Cach 3: ::insert() giong create() nhung ma co the them nhieu hon vi du (tao 1 loat dong du lieu)
+            Article::insert([data1],[data2],...)
+    + save() => Thuc hien luu xuong db
+
+    + do du lieu vao model:
+        + fillable: cac cot du lieu ma model duoc do vao
+            VD:         
+            + Controller:
+                $article->fill([
+                'title' => 'IWJEPWQE',
+                'content' => 'eqotjpoqjptqwjptoqwpotjqwopt',
+                'author' => 'Minh Dang',
+                ]);
+            + Model:
+                thi phai dat 1 bien 
+                protected $fillable = ['title','content','author'];
+
+
++ Vua doc vua ghi:
+    + firstOrCreate()
+        + neu nhu da ton tai roi => doc len
+        + neu chua ton tai thi tao => luu xuong db
+    + firstOrNew(): giong het firstOrCreate()
+    + updateOrCreate():
+    + updateOrNew(): giong tren
+
++ Cap nhap du lieu: update()
+    + doc model ra => sua => save()
+        VD: 
+        $article = Article::find(607);
+        $article->title = 'bai viet 10001';
+        $article->update();
+    + update([cac field can sua])
+        VD: Article::whereId(310)->update([
+            mang gtri can sua
+        ])
+
++ Xoa du lieu:
+    + doc model ra xong goi ham ->delete()
+    + lam nhu cach so 2 cua update():
+        destroy($id)
+    + destroy([ mang id ])
+
+Thuc hanh:
++ Tao ra 1 blog:
+- Danh sach bai viet
+- Tao moi bai viet
+- Sua bai viet
+- Xoa bai viet
+
++ Php artisan hien thi route:
+    + php artisan route:list
+
++ neu route co tham so thi se nam lan luot trong controller
+    + nam phia sau request
+
+
++ implicit binding:
+    + neu nhu k co kieu du lieu thi nhan dang thong thuong
+    + neu truyen kieu du lieu laravel tu dong bind
+
++ Eloquent relationship
+
++ moi quan he giua cac model
+    + 1-1
+    + 1-n
+    + n-n
+
++ Cach tao moi quan he:
+    + 1-n:
+        + Model cha: hasMany('ten model con')
+            VD:     
+            public function posts(){
+                return $this->hasMany('App\Post');
+            } tao moi quan he voi Post.php va de posts so nhieu vi moi quan he 1 cate-n posts
+        + Model con: belongsTo('ten model cha')
+        VD:     
+            public function category(){
+                return $this->hasMany('App\Category');
+            } tao moi quan he voi Category.php va de itcategory so  vi moi quan he 1 cate-n posts
+
+    + hien thi tat ca bai viet thuoc chuyen muc xa hoi
+
+    + n-n:
+        + Model 1: belongsToMany('model 2)
+        + Model 2: belongsToMany('model 1')
+        neu muon tao moi lien he voi bang ten dac biet thi dat vao sau 
+        VD: belongsToMany('model 2', 'ten bang')
+
+    + 1-1:
+        + model 1: hasOne('ten model 2')
+        + model 2: hasOne('ten model 1')
+
++ Laravel se tu dong tao ra property neu co relationship
+
+$post->category->name 
+=> ton them 1 lan query
+select * from posts where id = 1
+select * from categories where id = category_id
+2 lan query
+
++ Eagle loading:
+select * from post,category where post.id = 1 and category.id = post.id
+select * from posts where id = 1 left join category on category.id = post.id
+cach su dung(load san model r moi query)
+VD:         $post = Post::whereId($id)
+                    ->with('category:id,name') chi lay du lieu 2 cot id,name
+                    ->with('tags')
+                    ->firstOrfail();
+
+categories:
+    - id
+    - name
+    - views_count
+    - created_at
+    - author
+
+VD: hien thi bai viet => load luon 10 comment
+
++ custom eager loading:
+        $tags = $post->tags()->limit(5)->get(); //tag all neu chi la $post->tags => muon sap xep
+        nen de la tags() vi no moi tro den relationship chu chua query den db
++ constrain 
+    VD:         $post = Post::whereId($id)
+                    ->with('category:id,name')
+                    ->with(['tags' => function($query) {
+                        return $query->orderBy('id');
+                    }])
+                    ->firstOrfail();
+        query bien tags sap xep theo id
+
++ Model Morph (polymorphic relation):
+    + 1model => relation den nhieu model khac
+    link doc: tai 1h24p
+        https://www.facebook.com/nguyen.laptrinhvientv/videos/479232876763753
+comment vao bai viet, comment vao category
+
+posts: id,content, title
+category: id,name
+comments:
+    id
+    content
+    commentable_id -> integer
+    commentale_type -> string
+
+
+Tap menu da cap:
+
+Model: menu
+    + id
+    + text
+    + parent_id => nullable()
+    + link
+
++ get[ten thuoc tinh]Attribute:
+VD: getTitleAttribute()
+
+Xu ly mot property cua model truoc khi tra ve
+nghia la cai title nay sau khi duoc doc no se chay qua ham kia va bi thay doi
+
++ Collection:
+    + Mang: array
+    + Cac ham thuong dung:
+        + sort: so, string
+        + sortBy: neu nhu co object va array >< sortByDesc
+        + unique(): loai bo phan tu trung nhau
+
++ Validation:
+    + viet trong request ( chung ta co the viet trong controller)
+
++ Rules(cai ma trong ham request ay):
+    + required
+    + max:100 => toi da 100 ky tu
+    + min:10 => toi thieu 10 ky Tu
+    + email => bat buoc phai la email hop le
+    + integer => bat buoc phai la integer
+    + alpha => [a-z][0-9]
+    + alpha_dash => [a-z][0-9]_
+    + number => la so
+    + string => la chuoi 
+    + in:nam,nu => bat buoc gia tri nham vao : nam hoac nu VD: in:hn,dn,hp
+    + unique:[table],[column] VD: unique:posts,title
+
++ Custom rules:
+    + php artisan make:rule LegalQuote
+
++ Auth va middleware:
+    + authentication: dang ky/ dang nhap
+        + laravel/ui => tao ra cac views,js,css
+    + middleware: 
+        + giong nhu 1 hang rao
+        + tao 1 middleware:
+            + php artisan make:middleware BlockIpMiddleware
+        + Dang ky middleware:
+            + app\Http\Kernel.php: Dien vao file nay
+
+    + Custom he thong dang ky, dang nhap
+        + Dang ky bang username(email)
+        + them field khac: so dien thoai, dia chi...
+        + dang ky bang mang xa hoi (google, facebook)
+    + Dang nhap: dang nhap bang mang xa hoi
+    + Su dung vue authentication trong vuejs
+
++ update web:
+    + khi vao web lan dau => tai cac file js,css => cache
+    + sua code js => nguoi dung => ko f5 => dung cache cu
+
+    => de thay cache moi khi cap nhap tranh tinh trang nay
+    => sua app.blade.php trong layout asset(app.js),.. thanh mix(app.js),...
+    va them .version vao file webpack.mix.js
+
++ Su dung authentication trong vuejs
+
+C1: Laravel => router => truy cap => refresh
+    => load ra 1 view => import component vao <ten-component />
+C2: Vue => router => single page
+    + su dung vue voi laravel
+    + su dung vue rieng beit 
+=> cho het ve 1 cai
+
++ Queue: hang doi
+
++ tac vu: doi hoi nhieu thoi gian xu ly
+    + php artisan make:job [tenJob]
+    + chay theo sync=>chay luon => giong nhu k co queue
+    + chay theo database => 
+    php artisan queue:table => tao ra job database
+    chay queue: php artisan queue:work
+
+Gui mail khi mot nguoi dung xoa bai viet
+$user = auth()->user();
+SendDeletePostJob::dispatch($user->with('book'));
+
+// SendDeletePostJob
+
++ delay:
+    + sau bao nhieu phut => moi xu ly
+
+onQueue('ten queue') set ten queue ban muon chay thi luc nay muon chay thi phai go lenh
+VD: SendWelcomeMail::dispatch($user)->onQueue('sendWelcomeMail');
+php artisan queue:work --queue=sendWelcomeMail
+
+Neu nhu chay fail thi queue vao database cos ten failed_jobs
+
++ onConnection() => luu queue nay vao dau
+php artisan queue:retry [id] dua queue từ failed_jobs lên jobs
+php artisan queue:retry all dua tat ca queue từ failed_jobs lên jobs
+php artisan queue:forget [id] bo queue o failed_jobs
+php artisan queue:fflush xoa het o queue
+
+php artisan queue:work --tries=5 : chay 5 lan
+
+cai laravel tren hosting:
+k the cai supervisor => phan mem quan ly tien trinh
+
+php artisan queue:work --once: chay 1 lan
+
+Schedule and command:
++ Command: cach chay php artisan make:command [ten command]
+cach chay command php artisan $signature( bien ben trong ham Command o app/Console)
+Them ham Artisan::call('config:cache') de chay php artisan config:cache
+
+
++ Schedule: la cac tac vu duoc xu ly vao 1 thoi diem
+    + Bao cao ngay
++ Cai laravel: dat crontab moi phut 1 lan(bat buoc)
+    + application heart beat
+* Kernel o http khac Kernel o console
+
+->withoutOverlapping() de tranh bi overlap khi ma job thuc hien 2 phut con schedule cu goi 1 phut goi job 1 lan => bi chong cheo
+
++ Cache: luu tam => doc tu database qua nhieu ( dan den ung dung cua chung ta bi cham)
+    + Easy to use
+    + Difficult:
+        + decide which should be cached?
+            + cache any data which are readed more than writed(cache du lieu duoc doc thuong xuyen)
+            + cache in page which is accessed a lot of times(cache nhung trang duoc truy cap nhieu)
+            + Co nhung thanh phan duoc tu dong cache:
+                + config
+                + view: blade template
+        + where to cache?
+            + file: de cai dat
+            + redis: 
+                + cache tren ram
+                + ghi nhieu
+                    + luot xem
+                + thi thoang luu xuong database (Schedule)
+        + how many time to cache
+            + tuy:
+            + cache theo su kien:
+                + khi ai do dang bai moi => xoa cache di va luu cache lai\
+
++ trigger cache bang gi
+    + tao cache bang controller
+        + co nguoi se bi cham
+        + kha nang loi
+    + theo lich (khoang 10p thi he thong tu cache)
+    + theo su kien: bam nut dang bai=> queue => cache
++ Cache driver: => chi dinh cache duoc luu o dau
++ Cache::remember('ten cache', so giay, function() {
+    return abc;
+})
++ ban dau chua co cache thi chay function de lay du lieu sau do luu vao cache
++ tu lan chay thu 2 thi no se lay du lieu tu cache truoc neu k co thi moi query function kia()
+
++ Nhung cho thuong cache trong thuc te:
+    + trang chu
+    + Cache nhung trang ma duoc truy cap nhieu
+        + cache nhung bai viet duoc nhieu nguoi xem nhat
+    + Nhung cai du lieu ma duoc su dung nhieu noi    
+        + bang settings 
+
++ Thiet ke db:
+    + Menu: bai viet hot cua thang
+
+Quan ly thu vien:
+    + doc du lieu bang books => con sach hay khong
+    + con: luu thong tin muon
+    + update vao bang books => het sach
+
+=> say ra truong hop 2 nguoi cung muon 1 quyen sach
+=> can database lock
+
+InnoDb va myIsam
++ InnoDb: khi lock: lock ca bang => lock cac bang lien quan
++ MyIsam: lock dong du lieu
+
++ Lam trang web tin tuc:
+    + Muc tieu: hien 10 bai viet moi nhat
+
++ Authorization: phan quyen
+    + mot nguoi co the lam gi voi mot doi tuong
+        + Nguoi A co the xoa bai viet hay khong?
+        + User co the xoa bai viet cua nguoi do
+    
++ Quyen cua anh A voi bai viet B la gi?
++ Quyen cua chi C voi san pham D la gi?
+
+- Admin thi co quyen xoa tat ca bai viet cua user
+- User co the xoa bai viet cua chinh minh
++ Policy:
+    + la mot class dinh nghia quyen
+    + tao policy: php artisan make:poly ArticlePolicy --model=Models/Article
+    + Gan mot policy voi 1 model
+    + Dang ky policy: authserviceprovider
+    + luon phai su dung implicit binding (nghia la su dung bien Article $article thay vi $id)
+    + neu de model vao trong thu muc App\Models => dat policy => Models\Policies
+    VD: php artisan make:policy Models\Policies\ArticlePolicy --model=Models\Article
+    * nma tot nhat nen dang ki vao AuthServiceProvider
+
+    + Muon ket noi 1 function trong articlePolicy voi 1 function trong Controller thi lam nhu sau
+        + VD: $this->authorize('blockArticle', $article); dat o function trong controller
+
+    + co the ket noi nhu la 1 middleware:
+     VD: them vao web.php Route::get()->middleware(['auth', 'can:update,delete']);
+     update, delete la ham trong policy
++ Map:
+    * Policy => Controller
+    + viewAny => index
+    + update => edit, update
+    + view => show
+    + create => create va store
+    + delete => destroy
+    + restore => restore (soft delete) (khoi phuc lai bai viet xoa)
+    + forceDelete => destroy (hard delete)
+
++ Luon luon su dung implicit binding
++ tu dong nhan: neu de model trong thu muc app\models => dat policy => Models\Policies
++ remove index khoi policy
++ tu dat quyen khac
+
++ Docker:
+    - La mot phan mem: tao moi truong chay ung dung nhanh, tien loi
+        + php, nginx (apache), mysql, composer, npm => cai nhieu thu
+        + ca mot team dev: 
+            + ong A cai xampp => php 7.1
+            + ong B cai xamp => php 7.2 
+        + code tren may thi chay => dua len server => ko chay
+        + Di chuyen server 1 cach de dang
+        + Cai dat cac thanh phan de dang
+    - Cach hoat dong cua docker:
+        + Moi service se chay tren 1 container (may ao)
+        + Cac container co the ket noi voi nhau network
+        + cac container => co the ket noi voi may chu (may tinh cua chung ta)
+            + chia se file
+
++ image: hinh anh
+    + image dung de cai vao cac container
+
++ docker hub:
+    + trang luu chu cac image
+
++ port: 
+
+
++ docker pull: tai mot image ve
+    + docker pull [ten image]:[version]
+    + docker images: liet ke tat ca image ra
+    + docker ps: xem cac container dang chay
+    + docker stop [id container]: dung container dang chay
+    + docker run [ten image]
+        + -d : detach => chay ngam di
+        + -p 3309:3306 => forward cong 3306 trong container ra cong 3309 o ben ngoai may chu
+        + -v thumuc:thumuc
+    ip cua cac container la 0.0.0.0
+
++ volume:
+    + la cac thu muc, file
+
++ docker-compose:
+    + la mot phan mem de quan li docker 
+    + muon code web : bat mysql, bat nginx, bat php
+
++ cai dat docker-compose
++ docker-compose up -d
++ docker-compose stop: dung lai tat ca container da khai bao
++ docker-compose down: dung va xoa container
+
+alpine: la 1 he dieu hanh linux nho gon
+nginx:stable-alpine: 1 linux dc cai san nginx
