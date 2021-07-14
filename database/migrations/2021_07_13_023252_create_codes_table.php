@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTodaysTable extends Migration
+class CreateCodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateTodaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('todays', function (Blueprint $table) {
+        Schema::create('codes', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->boolean("completed")->default(false);
-            $table->boolean("approved")->default(false);
-            $table->string("taskId");
-            $table->integer('code_id')->default(1);
+            $table->string('qr_code');
+            $table->integer('project_id')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateTodaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todays');
+        Schema::dropIfExists('codes');
     }
 }

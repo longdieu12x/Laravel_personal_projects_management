@@ -1,0 +1,24 @@
+//get upcoming tasks
+    fetchUpcoming(){
+    axios.get('/api/upcomings')
+        .then((res) => {
+            return res.data;
+        })
+        .then((res) => {
+            this.upcoming = res.data;
+        })
+        .catch((err) => { console.log(err) });
+    },
+
+// Get today Tasks
+    fetchTodayTasks(){
+    axios.get('/api/todays')
+        .then((res) => {
+            return res.data;
+        })
+        .then((res) => {
+            this.todayTask = res.data;
+            this.code = res.data[0]['code'];
+        })
+        .catch((err) => { console.log(err) });
+    },

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UpcomingController;
 use App\Http\Controllers\API\TodayController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +16,6 @@ use App\Http\Controllers\API\TodayController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/home', 'ProjectController@index')->middleware('auth');
 
-Route::apiResources([
-    'upcomings' => 'API\UpcomingController',
-    'todays' => 'API\TodayController',
-]);
+Auth::routes();

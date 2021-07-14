@@ -16,7 +16,7 @@ class UpcomingController extends Controller
     public function index()
     {
         //
-        $upcoming = Upcoming::all();
+        $upcoming = Upcoming::with('code')->get();
         return UpcomingTaskResource::collection($upcoming);
     }
 

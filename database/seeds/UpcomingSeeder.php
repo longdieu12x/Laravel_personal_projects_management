@@ -21,6 +21,7 @@ class UpcomingSeeder extends Seeder
                 'approved' => false,
                 'waiting' => true,
                 'taskId' => Str::random(10),
+                'code_id' => 1,
             ]);
         }
     }

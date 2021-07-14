@@ -20,6 +20,7 @@ class TodaySeeder extends Seeder
                 'title' => $faker->sentence($nbWords = 4, $varialbeWords = false),
                 'approved' => false,
                 'taskId' => Str::random(10),
+                'code_id' => 1,
             ]);
         }
     }

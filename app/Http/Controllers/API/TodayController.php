@@ -16,7 +16,7 @@ class TodayController extends Controller
     public function index()
     {
         //
-        $today = Today::all();
+        $today = Today::with('code')->get();
         return TodayTaskResource::collection($today);
     }
 

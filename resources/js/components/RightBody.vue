@@ -1,23 +1,22 @@
 <template>
 <div id="right">
-    <h1>Development Crm</h1>
+
+    <h1>{{project['name']}}</h1>
+    <br>
+    <div class="qr-code">
+        <h2>Code: <span @click="saveToClipBoard()" ref="codeInput">{{code}}</span></h2>
+    </div>
     <div class="horizontal">
       <img src="../images/horizontal.png"  alt=""/>
     </div>
 
     <p>
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-      Lorem Ipsum has been the industry's standard dummy text ever since the
-      1500s
+      {{project['content']}}
     </p>
-
     <div class="users-icon"><img src="../images/users.png" alt=""/></div>
     <div class="upcoming">
         <div class="add-tasks">
             <h2>Today's Task</h2>
-            <div class="add-action">
-                <img src="../images/add.png" alt="">
-            </div>
         </div>
 
             <ul class="tasks-list">
@@ -45,7 +44,7 @@
     <div class="upcoming">
         <div class="add-tasks">
             <h2>Upcoming</h2>
-            <div class="add-action">
+            <div class="add-action" @click="addUpcomingTask">
                 <img src="../images/add.png" alt="">
             </div>
         </div>
@@ -83,30 +82,31 @@ import axios from 'axios';
 export default {
   data() {
     return {
-        todayTask: [],
-        upcoming: [],
+        todayTask: window.todays,
+        upcoming: window.upcomings,
         newTask: "",
         newTodayTask: "",
+        code: window.code['qr_code'],
+        code_posts: window.upcomings,
+        project: window.project,
     };
   },
   created() {
-      this.fetchTodayTasks();
-      this.fetchUpcoming();
   },
+
   methods: {
+      //** Save to Clip board */
+      saveToClipBoard(){
+        let e = this.$refs.codeInput;
+        const el = document.createElement('textarea');
+        el.value = e.innerText;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      }
+      ,
       //** Upcoming Task */
-      //get upcoming tasks
-      fetchUpcoming(){
-        axios.get('/api/upcomings')
-            .then((res) => {
-                return res.data;
-            })
-            .then((res) => {
-                this.upcoming = res.data;
-                console.log(this.upcoming);
-            })
-            .catch((err) => { console.log(err) });
-        },
      // Add upcoming task
       addUpcomingTask(e){
           e.preventDefault();
@@ -117,12 +117,12 @@ export default {
               const newTask = {
                   title: this.newTask,
                   waiting: true,
-                  taskId: Math.random().toString(36).substring(7)
+                  taskId: Math.random().toString(36).substring(7),
+                  code: this.code
               };
               axios.post("/api/upcomings", newTask)
               .then(()=> {
                   this.upcoming.push(newTask);
-                  console.log(newTask);
               })
               .catch((err) => {console.log(err);})
               ;
@@ -160,18 +160,6 @@ export default {
           }
       },
       //** Today Task */
-      // Get today Tasks
-      fetchTodayTasks(){
-        axios.get('/api/todays')
-            .then((res) => {
-                return res.data;
-            })
-            .then((res) => {
-                this.todayTask = res.data;
-                console.log(this.todayTask);
-            })
-            .catch((err) => { console.log(err) });
-      },
       addDailyTask(taskId){
           // get task
           const task = this.upcoming.filter(({taskId: id}) => id == taskId)[0];
