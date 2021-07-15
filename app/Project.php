@@ -7,7 +7,7 @@ use App\Code;
 class Project extends Model
 {
     //
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'content'];
     public function users(){
         return $this->belongsToMany(User::class);
     }

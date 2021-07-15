@@ -18,7 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/projects', 'API\ProjectController@store')->name('project.post');
+
 Route::apiResources([
     'upcomings' => 'API\UpcomingController',
     'todays' => 'API\TodayController',
 ]);
+

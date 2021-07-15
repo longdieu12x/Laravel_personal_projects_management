@@ -10,20 +10,20 @@
             <img src="../images/search.png" alt=""/>
         </div>
         <div class="project">
-            <h3>Projects <span>(18)</span></h3>
+            <h3>Projects <span>({{projects.length}})</span></h3>
 
             <div class="projects">
-                <div class="a-project" >
+                <div class="a-project" v-for="project in projects" :key="project.id">
                     <div class="box-color" @click="changeToShowProject()">
                         <img src="../images/overlay.png" alt="">
                         <span>PT</span>
                     </div>
-                    <h6>Development</h6>
+                    <h6>{{project['name']}}</h6>
                 </div>
                 <div class="a-project">
                     <div class="box-color">
                         <img src="../images/overlay.png" alt="" @click="changeToCreateProject()">
-                        <span>PT</span>
+                        <span>AP</span>
                     </div>
                     <h6>Add Project</h6>
                 </div>
@@ -37,6 +37,7 @@ export default {
     data(){
         return {
             user: window.user,
+            projects: window.projects,
         }
     },
 

@@ -2032,6 +2032,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2048,13 +2050,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   watch: {},
   created: function created() {},
   data: function data() {
-    return {};
+    return {
+      project_name: '',
+      project_content: '',
+      user: window.user
+    };
   },
-  methods: {}
+  methods: {
+    addProject: function addProject() {
+      var newProject = {
+        name: this.project_name,
+        content: this.project_content,
+        user: this.user['id']
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/projects', newProject).then(function (res) {
+        return console.log(res);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+      document.location.reload();
+    }
+  }
 });
 
 /***/ }),
@@ -2138,7 +2159,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user: window.user
+      user: window.user,
+      projects: window.projects
     };
   },
   methods: {
@@ -38142,7 +38164,7 @@ var render = function() {
             on: {
               submit: function($event) {
                 $event.preventDefault()
-                return _vm.addUpcomingTask.apply(null, arguments)
+                return _vm.addProject.apply(null, arguments)
               }
             }
           },
@@ -38150,23 +38172,54 @@ var render = function() {
             _c("h2", [_vm._v("Project Name:")]),
             _vm._v(" "),
             _c("input", {
-              staticStyle: { "margin-bottom": "50px" },
-              attrs: { type: "text", name: "name" }
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.project_name,
+                  expression: "project_name"
+                }
+              ],
+              staticStyle: { "margin-bottom": "150px" },
+              attrs: { type: "text", name: "name" },
+              domProps: { value: _vm.project_name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.project_name = $event.target.value
+                }
+              }
             }),
             _vm._v(" "),
             _c("h2", [_vm._v("Content of your Project:")]),
             _vm._v(" "),
             _c("textarea", {
-              attrs: { name: "content", rows: "4", cols: "50" }
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.project_content,
+                  expression: "project_content"
+                }
+              ],
+              staticStyle: { display: "block", width: "100%" },
+              attrs: { name: "content", rows: "12" },
+              domProps: { value: _vm.project_content },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.project_content = $event.target.value
+                }
+              }
             }),
             _vm._v(" "),
             _c(
               "button",
-              {
-                staticClass: "bubbly-button",
-                attrs: { type: "submit" },
-                on: { click: _vm.changeRight }
-              },
+              { staticClass: "bubbly-button", attrs: { type: "submit" } },
               [_vm._v("Create")]
             )
           ]
@@ -38259,49 +38312,59 @@ var render = function() {
     _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "project" }, [
-      _vm._m(1),
+      _c("h3", [
+        _vm._v("Projects "),
+        _c("span", [_vm._v("(" + _vm._s(_vm.projects.length) + ")")])
+      ]),
       _vm._v(" "),
-      _c("div", { staticClass: "projects" }, [
-        _c("div", { staticClass: "a-project" }, [
-          _c(
-            "div",
-            {
-              staticClass: "box-color",
-              on: {
-                click: function($event) {
-                  return _vm.changeToShowProject()
-                }
-              }
-            },
-            [
+      _c(
+        "div",
+        { staticClass: "projects" },
+        [
+          _vm._l(_vm.projects, function(project) {
+            return _c("div", { key: project.id, staticClass: "a-project" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "box-color",
+                  on: {
+                    click: function($event) {
+                      return _vm.changeToShowProject()
+                    }
+                  }
+                },
+                [
+                  _c("img", {
+                    attrs: { src: __webpack_require__(/*! ../images/overlay.png */ "./resources/js/images/overlay.png"), alt: "" }
+                  }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("PT")])
+                ]
+              ),
+              _vm._v(" "),
+              _c("h6", [_vm._v(_vm._s(project["name"]))])
+            ])
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "a-project" }, [
+            _c("div", { staticClass: "box-color" }, [
               _c("img", {
-                attrs: { src: __webpack_require__(/*! ../images/overlay.png */ "./resources/js/images/overlay.png"), alt: "" }
+                attrs: { src: __webpack_require__(/*! ../images/overlay.png */ "./resources/js/images/overlay.png"), alt: "" },
+                on: {
+                  click: function($event) {
+                    return _vm.changeToCreateProject()
+                  }
+                }
               }),
               _vm._v(" "),
-              _c("span", [_vm._v("PT")])
-            ]
-          ),
-          _vm._v(" "),
-          _c("h6", [_vm._v("Development")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "a-project" }, [
-          _c("div", { staticClass: "box-color" }, [
-            _c("img", {
-              attrs: { src: __webpack_require__(/*! ../images/overlay.png */ "./resources/js/images/overlay.png"), alt: "" },
-              on: {
-                click: function($event) {
-                  return _vm.changeToCreateProject()
-                }
-              }
-            }),
+              _c("span", [_vm._v("AP")])
+            ]),
             _vm._v(" "),
-            _c("span", [_vm._v("PT")])
-          ]),
-          _vm._v(" "),
-          _c("h6", [_vm._v("Add Project")])
-        ])
-      ])
+            _c("h6", [_vm._v("Add Project")])
+          ])
+        ],
+        2
+      )
     ])
   ])
 }
@@ -38317,12 +38380,6 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("img", { attrs: { src: __webpack_require__(/*! ../images/search.png */ "./resources/js/images/search.png"), alt: "" } })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h3", [_vm._v("Projects "), _c("span", [_vm._v("(18)")])])
   }
 ]
 render._withStripped = true

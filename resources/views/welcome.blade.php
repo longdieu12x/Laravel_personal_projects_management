@@ -23,6 +23,7 @@
         var project = JSON.parse('@json($project)');
         var user = JSON.parse('@json($user)');
         var isNeedToCreate = false;
+        var projects = JSON.parse('@json($projects)');
     </script>
     <script src="{{asset('js/app.js')}}"></script>
 </body>

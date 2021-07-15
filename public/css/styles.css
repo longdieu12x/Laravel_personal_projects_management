@@ -192,8 +192,8 @@ img {
             background-color: var(--customgreen); }
           .mcontainer #body #left .project .projects .a-project:nth-child(5) div.box-color {
             background-color: var(--custompurple); }
-          .mcontainer #body #left .project .projects .a-project:nth-child(6) div.box-color {
-            background-color: var(--customblue); }
+          .mcontainer #body #left .project .projects .a-project:last-child div.box-color {
+            background-color: var(--customgreen1) !important; }
     .mcontainer #body #left .grid {
       bottom: 0%;
       left: 0px;
@@ -352,10 +352,10 @@ img {
   .qr-code {
     font-size: 20px;
     font-family: 'MyriadProBold'; }
-  
+
   .qr-code h2 span {
     cursor: pointer; }
-  
+
   .bubbly-button {
     font-family: 'Helvetica', 'Arial', sans-serif;
     display: inline-block;
@@ -405,7 +405,7 @@ img {
     .bubbly-button.animate:after {
       display: block;
       animation: bottomBubbles ease-in-out 0.75s forwards; }
-  
+
 @keyframes topBubbles {
   0% {
     background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%; }
@@ -423,5 +423,4 @@ img {
   100% {
     background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
     background-size: 0% 0%, 0% 0%,  0% 0%,  0% 0%,  0% 0%,  0% 0%; } }
-  
-  
+
