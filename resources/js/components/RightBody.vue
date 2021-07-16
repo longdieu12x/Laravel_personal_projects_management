@@ -1,16 +1,13 @@
 <template>
 <div id="right">
 
-    <h1>{{project['name']}}</h1>
+    <h1 v-if="project">{{project['name']}}</h1>
     <br>
-    <div class="qr-code">
-        <h2>Code: <span @click="saveToClipBoard()" ref="codeInput">{{code}}</span></h2>
-    </div>
     <div class="horizontal">
       <img src="../images/horizontal.png"  alt=""/>
     </div>
 
-    <p>
+    <p v-if="project">
       {{project['content']}}
     </p>
     <div class="users-icon"><img src="../images/users.png" alt=""/></div>
@@ -20,7 +17,7 @@
         </div>
 
             <ul class="tasks-list">
-                <li v-for="task in todayTask" :key="task.id">
+                <li  v-for="task in todayTask" :key="task.id">
                     <div class="info">
                         <div class="left">
                             <label class="myCheckbox">
@@ -79,16 +76,17 @@
 
 <script>
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 export default {
+  props: ['todayTask', 'upcoming', 'project', 'project_id'],
   data() {
     return {
-        todayTask: window.todays,
-        upcoming: window.upcomings,
         newTask: "",
         newTodayTask: "",
-        code: window.code['qr_code'],
-        code_posts: window.upcomings,
-        project: window.project,
+        // todayTask: this.todayTasks,
+        // upcoming: this.upcomings,
+        // project: this.projects,
+        // project_id: this.project_id,
     };
   },
   created() {
@@ -193,7 +191,8 @@ export default {
                   this.todayTask = this.todayTask.filter(({taskId: id}) => id !== taskId);
             });
           }
-      }
+      },
+      ...mapGetters(['getProjectId']),
 
   },
 };

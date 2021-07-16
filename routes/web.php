@@ -19,4 +19,3 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/home', 'API\ProjectController@index')->middleware('auth');
 Auth::routes();
 
-// Route::get('/projects/{project}', 'ProjectController@getProjects');

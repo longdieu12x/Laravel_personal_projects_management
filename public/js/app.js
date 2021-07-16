@@ -2002,16 +2002,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      isCreate: false
+      todayTask: window.todays,
+      upcoming: window.upcomings,
+      isCreate: false,
+      project: window.project,
+      project_id: -1
     };
   },
-  created: function created() {},
+  created: function created() {
+    var _this = this;
+
+    axios.get('/api/upcomings/1').then(function (res) {
+      console.log(res.data);
+      _this.upcomings = res.data;
+    })["catch"](function (err) {
+      console.log(err);
+      _this.upcoming = [];
+    });
+    axios.get('/api/todays/1').then(function (res) {
+      _this.todayTask = res.data;
+    })["catch"](function (err) {
+      console.log(err);
+      _this.todayTask = [];
+    });
+  },
   methods: {
     showProject: function showProject(val) {
       this.isCreate = val;
     },
     createProject: function createProject(val) {
       this.isCreate = val;
+    },
+    updateProjectId: function updateProjectId(project_id) {
+      var _this2 = this;
+
+      this.project_id = project_id;
+      axios.get('/api/upcomings/' + project_id).then(function (res) {
+        console.log(res.data);
+        _this2.upcomings = res.data;
+      })["catch"](function (err) {
+        console.log(err);
+        _this2.upcoming = [];
+      });
+      axios.get('/api/todays/' + project_id).then(function (res) {
+        _this2.todayTask = res.data;
+      })["catch"](function (err) {
+        console.log(err);
+        _this2.todayTask = [];
+      });
     }
   },
   components: {
@@ -2122,6 +2160,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2156,6 +2201,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2163,8 +2209,10 @@ __webpack_require__.r(__webpack_exports__);
       projects: window.projects
     };
   },
-  methods: {
-    changeToShowProject: function changeToShowProject() {
+  created: function created() {},
+  methods: _objectSpread(_objectSpread({
+    changeToShowProject: function changeToShowProject(project) {
+      this.$emit('updateProjectId', project.id);
       this.$emit('updateToShowProject', false);
     },
     changeToCreateProject: function changeToCreateProject() {
@@ -2180,7 +2228,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     }
-  }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['getProjectId'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])(['changeProjectId']))
 });
 
 /***/ }),
@@ -2196,9 +2244,13 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2276,20 +2328,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['todayTask', 'upcoming', 'project', 'project_id'],
   data: function data() {
     return {
-      todayTask: window.todays,
-      upcoming: window.upcomings,
       newTask: "",
-      newTodayTask: "",
-      code: window.code['qr_code'],
-      code_posts: window.upcomings,
-      project: window.project
+      newTodayTask: "" // todayTask: this.todayTasks,
+      // upcoming: this.upcomings,
+      // project: this.projects,
+      // project_id: this.project_id,
+
     };
   },
   created: function created() {},
-  methods: {
+  methods: _objectSpread({
     //** Save to Clip board */
     saveToClipBoard: function saveToClipBoard() {
       var e = this.$refs.codeInput;
@@ -2411,7 +2464,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     }
-  }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(['getProjectId']))
 });
 
 /***/ }),
@@ -38110,6 +38163,9 @@ var render = function() {
           updateToShowProject: function($event) {
             return _vm.showProject($event)
           },
+          updateProjectId: function($event) {
+            return _vm.updateProjectId($event)
+          },
           updateToCreateProject: function($event) {
             return _vm.createProject($event)
           }
@@ -38118,7 +38174,17 @@ var render = function() {
       _vm._v(" "),
       _vm.isCreate == true ? _c("project-component") : _vm._e(),
       _vm._v(" "),
-      _vm.isCreate == false ? _c("rightbody-component") : _vm._e()
+      _vm.isCreate == false
+        ? _c("rightbody-component", {
+            key: _vm.project_id,
+            attrs: {
+              todayTask: _vm.todayTask,
+              upcoming: _vm.upcoming,
+              project: _vm.project,
+              project_id: _vm.project_id
+            }
+          })
+        : _vm._e()
     ],
     1
   )
@@ -38329,7 +38395,7 @@ var render = function() {
                   staticClass: "box-color",
                   on: {
                     click: function($event) {
-                      return _vm.changeToShowProject()
+                      return _vm.changeToShowProject(project)
                     }
                   }
                 },
@@ -38404,31 +38470,17 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "right" } }, [
-    _c("h1", [_vm._v(_vm._s(_vm.project["name"]))]),
+    _vm.project ? _c("h1", [_vm._v(_vm._s(_vm.project["name"]))]) : _vm._e(),
     _vm._v(" "),
     _c("br"),
     _vm._v(" "),
-    _c("div", { staticClass: "qr-code" }, [
-      _c("h2", [
-        _vm._v("Code: "),
-        _c(
-          "span",
-          {
-            ref: "codeInput",
-            on: {
-              click: function($event) {
-                return _vm.saveToClipBoard()
-              }
-            }
-          },
-          [_vm._v(_vm._s(_vm.code))]
-        )
-      ])
-    ]),
-    _vm._v(" "),
     _vm._m(0),
     _vm._v(" "),
-    _c("p", [_vm._v("\n      " + _vm._s(_vm.project["content"]) + "\n    ")]),
+    _vm.project
+      ? _c("p", [
+          _vm._v("\n      " + _vm._s(_vm.project["content"]) + "\n    ")
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _vm._m(1),
     _vm._v(" "),
@@ -52667,17 +52719,17 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   state: {
-    isShow: false
+    project_id: 0
   },
   getters: {
-    getIsShow: function getIsShow(state) {
-      return state.isShow;
+    getProjectId: function getProjectId(state) {
+      return state.project_id;
     }
   },
   actions: {},
   mutations: {
-    changeIsShow: function changeIsShow(state, value) {
-      state.isShow = value;
+    changeProjectId: function changeProjectId(state, value) {
+      state.project_id = value;
     }
   }
 }));

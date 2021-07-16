@@ -18,8 +18,8 @@ class ProjectController extends Controller
     public function index()
     {
         //
-        $project = Project::first();
         $user = Auth::user();
+        ($user->projects[0] ? $project = $user->projects[0] : $project= NULL) ;
         return view('welcome')
                         ->with('user',$user)
                         ->with('projects',$user->projects)

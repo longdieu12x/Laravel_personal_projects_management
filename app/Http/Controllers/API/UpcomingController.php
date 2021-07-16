@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Upcoming;
+use App\Project;
 use App\Http\Resources\UpcomingTaskResource;
 class UpcomingController extends Controller
 {
@@ -13,6 +14,10 @@ class UpcomingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getUpcomings($id){
+        $project = Project::where('id',$id)->with('code')->first();
+        return ($project->code->upcomings) ? $project->code->upcomings : $project->code->upcomings;
+    }
     public function index()
     {
         //

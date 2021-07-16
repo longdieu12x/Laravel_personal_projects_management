@@ -14,7 +14,7 @@
 
             <div class="projects">
                 <div class="a-project" v-for="project in projects" :key="project.id">
-                    <div class="box-color" @click="changeToShowProject()">
+                    <div class="box-color" @click="changeToShowProject(project)">
                         <img src="../images/overlay.png" alt="">
                         <span>PT</span>
                     </div>
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 export default {
     data(){
         return {
@@ -40,9 +41,11 @@ export default {
             projects: window.projects,
         }
     },
-
+    created(){
+    },
     methods:{
-        changeToShowProject(){
+        changeToShowProject(project){
+            this.$emit('updateProjectId',project.id);
             this.$emit('updateToShowProject', false);
         },
         changeToCreateProject(){
@@ -61,7 +64,9 @@ export default {
                     });
             }
         },
-    }
+        ...mapGetters(['getProjectId']),
+        ...mapMutations(['changeProjectId']),
+    },
 }
 </script>
 

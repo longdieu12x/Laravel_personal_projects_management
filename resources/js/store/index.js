@@ -4,20 +4,21 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+
     state: {
-        isShow: false,
+        project_id: 0,
     },
     getters: {
-        getIsShow(state){
-            return state.isShow;
+        getProjectId(state){
+            return state.project_id;
         }
     },
     actions: {
 
     },
     mutations: {
-        changeIsShow(state, value){
-            state.isShow = value;
+        changeProjectId(state, value){
+            state.project_id = value;
         }
     }
 });

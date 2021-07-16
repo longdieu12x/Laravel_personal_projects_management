@@ -25,3 +25,8 @@ Route::apiResources([
     'todays' => 'API\TodayController',
 ]);
 
+// GET UPCOMINGS
+Route::get('/upcomings/{upcoming}', 'API\UpcomingController@getUpcomings');
+
+// GET TODAYS
+Route::get('/todays/{today}', 'API\TodayController@getTodays');

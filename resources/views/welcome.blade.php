@@ -19,7 +19,6 @@
     <script type="application/javascript">
         var upcomings = JSON.parse('@json($code_posts->upcomings)');
         var todays = JSON.parse('@json($code_posts->todays)');
-        var code = JSON.parse('@json($code_posts)');
         var project = JSON.parse('@json($project)');
         var user = JSON.parse('@json($user)');
         var isNeedToCreate = false;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Today;
+use App\Project;
 use App\Http\Resources\TodayTaskResource;
 class TodayController extends Controller
 {
@@ -13,6 +14,10 @@ class TodayController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getTodays($id){
+        $project = Project::where('id',$id)->with('code')->first();
+        return $project->code->todays;
+    }
     public function index()
     {
         //
