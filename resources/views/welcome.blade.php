@@ -17,11 +17,7 @@
         <app-component></app-component>
     </div>
     <script type="application/javascript">
-        var upcomings = JSON.parse('@json($code_posts->upcomings)');
-        var todays = JSON.parse('@json($code_posts->todays)');
-        var project = JSON.parse('@json($project)');
         var user = JSON.parse('@json($user)');
-        var isNeedToCreate = false;
         var projects = JSON.parse('@json($projects)');
     </script>
     <script src="{{asset('js/app.js')}}"></script>

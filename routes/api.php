@@ -30,3 +30,6 @@ Route::get('/upcomings/{upcoming}', 'API\UpcomingController@getUpcomings');
 
 // GET TODAYS
 Route::get('/todays/{today}', 'API\TodayController@getTodays');
+
+//GET PROJECTS
+Route::get('/projects/{project}', 'API\ProjectController@getProjects');

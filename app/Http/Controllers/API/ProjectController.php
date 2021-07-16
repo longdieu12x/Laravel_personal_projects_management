@@ -16,16 +16,17 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getProjects($id){
+        $project = Project::where('id',$id)->first();
+        return $project;
+    }
     public function index()
     {
         //
         $user = Auth::user();
-        ($user->projects[0] ? $project = $user->projects[0] : $project= NULL) ;
         return view('welcome')
                         ->with('user',$user)
-                        ->with('projects',$user->projects)
-                        ->with('code_posts', $project->code)
-                        ->with('project', $project);
+                        ->with('projects',$user->projects);
     }
 
     /**

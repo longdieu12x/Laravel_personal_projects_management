@@ -26,8 +26,7 @@ export default {
     return {
         todayTask: window.todays,
         upcoming: window.upcomings,
-        isCreate: false,
-        project: window.project,
+        isCreate: true,
         project_id: 1,
         count: 2,
     }

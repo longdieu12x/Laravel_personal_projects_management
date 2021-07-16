@@ -2009,8 +2009,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       todayTask: window.todays,
       upcoming: window.upcomings,
-      isCreate: false,
-      project: window.project,
+      isCreate: true,
       project_id: 1,
       count: 2
     };
@@ -2322,7 +2321,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     var _this = this;
 
-    console.log(this.project_id);
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/projects/' + this.project_id).then(function (res) {
+      _this.project = res.data;
+      console.log(_this.project);
+    });
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/upcomings/' + this.project_id).then(function (res) {
       _this.upcoming = res.data;
     })["catch"](function (err) {

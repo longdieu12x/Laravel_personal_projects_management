@@ -90,7 +90,13 @@ export default {
     };
   },
   created() {
-    console.log(this.project_id);
+
+    axios.get('/api/projects/'+this.project_id)
+        .then(res => {
+            this.project = res.data;
+            console.log(this.project);
+        })
+    ;
     axios.get('/api/upcomings/' + this.project_id)
         .then(res => {
             this.upcoming = res.data;
