@@ -21,7 +21,7 @@ class UpcomingTaskResource extends JsonResource
             'approved' => $this->approved,
             'waiting' => $this->waiting,
             'taskId' => $this->taskId,
-            'code' => $this->code->qr_code,
+            'code' => $this->code->id,
         ];
     }
 }

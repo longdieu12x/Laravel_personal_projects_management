@@ -1996,6 +1996,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -2006,26 +2011,11 @@ __webpack_require__.r(__webpack_exports__);
       upcoming: window.upcomings,
       isCreate: false,
       project: window.project,
-      project_id: -1
+      project_id: 1,
+      count: 2
     };
   },
-  created: function created() {
-    var _this = this;
-
-    axios.get('/api/upcomings/1').then(function (res) {
-      console.log(res.data);
-      _this.upcomings = res.data;
-    })["catch"](function (err) {
-      console.log(err);
-      _this.upcoming = [];
-    });
-    axios.get('/api/todays/1').then(function (res) {
-      _this.todayTask = res.data;
-    })["catch"](function (err) {
-      console.log(err);
-      _this.todayTask = [];
-    });
-  },
+  created: function created() {},
   methods: {
     showProject: function showProject(val) {
       this.isCreate = val;
@@ -2034,22 +2024,7 @@ __webpack_require__.r(__webpack_exports__);
       this.isCreate = val;
     },
     updateProjectId: function updateProjectId(project_id) {
-      var _this2 = this;
-
       this.project_id = project_id;
-      axios.get('/api/upcomings/' + project_id).then(function (res) {
-        console.log(res.data);
-        _this2.upcomings = res.data;
-      })["catch"](function (err) {
-        console.log(err);
-        _this2.upcoming = [];
-      });
-      axios.get('/api/todays/' + project_id).then(function (res) {
-        _this2.todayTask = res.data;
-      })["catch"](function (err) {
-        console.log(err);
-        _this2.todayTask = [];
-      });
     }
   },
   components: {
@@ -2330,18 +2305,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['todayTask', 'upcoming', 'project', 'project_id'],
+  props: ['project_id'],
   data: function data() {
     return {
       newTask: "",
-      newTodayTask: "" // todayTask: this.todayTasks,
-      // upcoming: this.upcomings,
-      // project: this.projects,
-      // project_id: this.project_id,
+      newTodayTask: "",
+      todayTask: [],
+      upcoming: [],
+      project: {
+        'name': 'Development',
+        'content': 'hi bro'
+      } // project_id: this.project_id,
 
     };
   },
-  created: function created() {},
+  created: function created() {
+    var _this = this;
+
+    console.log(this.project_id);
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/upcomings/' + this.project_id).then(function (res) {
+      _this.upcoming = res.data;
+    })["catch"](function (err) {
+      console.log(err);
+      _this.upcoming = [];
+    });
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/todays/' + this.project_id).then(function (res) {
+      _this.todayTask = res.data;
+    })["catch"](function (err) {
+      console.log(err);
+      _this.todayTask = [];
+    });
+  },
   methods: _objectSpread({
     //** Save to Clip board */
     saveToClipBoard: function saveToClipBoard() {
@@ -2356,7 +2350,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     //** Upcoming Task */
     // Add upcoming task
     addUpcomingTask: function addUpcomingTask(e) {
-      var _this = this;
+      var _this2 = this;
 
       e.preventDefault();
 
@@ -2367,10 +2361,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           title: this.newTask,
           waiting: true,
           taskId: Math.random().toString(36).substring(7),
-          code: this.code
+          code_id: this.project_id
         };
         axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/upcomings", newTask).then(function () {
-          _this.upcoming.push(newTask);
+          _this2.upcoming.push(newTask);
         })["catch"](function (err) {
           console.log(err);
         }); // Clear newTask
@@ -2380,7 +2374,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     // Delete Upcoming Task
     deleteUpcoming: function deleteUpcoming(taskId) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (confirm("Are you sure?")) {
         fetch("api/upcomings/".concat(taskId), {
@@ -2388,7 +2382,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }).then(function (res) {
           return res.json();
         }).then(function () {
-          _this2.upcoming = _this2.upcoming.filter(function (_ref) {
+          _this3.upcoming = _this3.upcoming.filter(function (_ref) {
             var id = _ref.taskId;
             return id !== taskId;
           });
@@ -2396,7 +2390,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     checkUpcoming: function checkUpcoming(taskId) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.todayTask.length > 4) {
         alert("Sorry complete existing task");
@@ -2409,7 +2403,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }).then(function (res) {
           return res.json();
         }).then(function () {
-          _this3.upcoming = _this3.upcoming.filter(function (_ref2) {
+          _this4.upcoming = _this4.upcoming.filter(function (_ref2) {
             var id = _ref2.taskId;
             return id !== taskId;
           });
@@ -2418,7 +2412,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     //** Today Task */
     addDailyTask: function addDailyTask(taskId) {
-      var _this4 = this;
+      var _this5 = this;
 
       // get task
       var task = this.upcoming.filter(function (_ref3) {
@@ -2427,13 +2421,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })[0]; // Post request
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/todays", task).then(function () {
-        _this4.todayTask.unshift(task);
+        _this5.todayTask.unshift(task);
       })["catch"](function (err) {
         return console.log(err);
       });
     },
     deleteTodayTask: function deleteTodayTask(taskId) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (confirm("Do you want to delete this task?")) {
         fetch("api/todays/".concat(taskId), {
@@ -2441,7 +2435,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }).then(function (res) {
           return res.json();
         }).then(function () {
-          _this5.todayTask = _this5.todayTask.filter(function (_ref4) {
+          _this6.todayTask = _this6.todayTask.filter(function (_ref4) {
             var id = _ref4.taskId;
             return id !== taskId;
           });
@@ -2449,7 +2443,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     updateTodayTask: function updateTodayTask(taskId) {
-      var _this6 = this;
+      var _this7 = this;
 
       if (confirm("Do you actually finish this task?")) {
         fetch("api/todays/".concat(taskId), {
@@ -2457,7 +2451,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }).then(function (res) {
           return res.json();
         }).then(function () {
-          _this6.todayTask = _this6.todayTask.filter(function (_ref5) {
+          _this7.todayTask = _this7.todayTask.filter(function (_ref5) {
             var id = _ref5.taskId;
             return id !== taskId;
           });
@@ -38177,12 +38171,7 @@ var render = function() {
       _vm.isCreate == false
         ? _c("rightbody-component", {
             key: _vm.project_id,
-            attrs: {
-              todayTask: _vm.todayTask,
-              upcoming: _vm.upcoming,
-              project: _vm.project,
-              project_id: _vm.project_id
-            }
+            attrs: { project_id: _vm.project_id }
           })
         : _vm._e()
     ],
@@ -38470,17 +38459,13 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "right" } }, [
-    _vm.project ? _c("h1", [_vm._v(_vm._s(_vm.project["name"]))]) : _vm._e(),
+    _c("h1", [_vm._v(_vm._s(_vm.project["name"]))]),
     _vm._v(" "),
     _c("br"),
     _vm._v(" "),
     _vm._m(0),
     _vm._v(" "),
-    _vm.project
-      ? _c("p", [
-          _vm._v("\n      " + _vm._s(_vm.project["content"]) + "\n    ")
-        ])
-      : _vm._e(),
+    _c("p", [_vm._v("\n      " + _vm._s(_vm.project["content"]) + "\n    ")]),
     _vm._v(" "),
     _vm._m(1),
     _vm._v(" "),

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\User;
 
 class ProjectController extends Controller
@@ -49,7 +50,12 @@ class ProjectController extends Controller
         $project_post = new Project;
         $project_post->fill($request->all());
         $project_post->save();
+        DB::table('codes')->insert([
+            "qr_code" => substr(str_shuffle(str_repeat("0123456789ABCDEFGH", 5)), 0, 5),
+            "project_id" => $project_post->id,
+        ]);
         $project_post->users()->attach($request->user);
+        return $project_post->id;
     }
 
     /**

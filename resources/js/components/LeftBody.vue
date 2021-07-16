@@ -42,6 +42,7 @@ export default {
         }
     },
     created(){
+
     },
     methods:{
         changeToShowProject(project){

@@ -1,13 +1,13 @@
 <template>
 <div id="right">
 
-    <h1 v-if="project">{{project['name']}}</h1>
+    <h1>{{project['name']}}</h1>
     <br>
     <div class="horizontal">
       <img src="../images/horizontal.png"  alt=""/>
     </div>
 
-    <p v-if="project">
+    <p>
       {{project['content']}}
     </p>
     <div class="users-icon"><img src="../images/users.png" alt=""/></div>
@@ -78,18 +78,37 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 export default {
-  props: ['todayTask', 'upcoming', 'project', 'project_id'],
+  props: ['project_id'],
   data() {
     return {
         newTask: "",
         newTodayTask: "",
-        // todayTask: this.todayTasks,
-        // upcoming: this.upcomings,
-        // project: this.projects,
+        todayTask: [],
+        upcoming: [],
+        project: { 'name': 'Development', 'content': 'hi bro'},
         // project_id: this.project_id,
     };
   },
   created() {
+    console.log(this.project_id);
+    axios.get('/api/upcomings/' + this.project_id)
+        .then(res => {
+            this.upcoming = res.data;
+        })
+        .catch(err => {
+            console.log(err);
+            this.upcoming = [];
+        })
+    ;
+    axios.get('/api/todays/' + this.project_id)
+        .then(res => {
+            this.todayTask = res.data;
+        })
+        .catch(err => {
+            console.log(err);
+            this.todayTask = [];
+        })
+    ;
   },
 
   methods: {
@@ -116,7 +135,7 @@ export default {
                   title: this.newTask,
                   waiting: true,
                   taskId: Math.random().toString(36).substring(7),
-                  code: this.code
+                  code_id: this.project_id,
               };
               axios.post("/api/upcomings", newTask)
               .then(()=> {

@@ -16,7 +16,7 @@ class UpcomingController extends Controller
      */
     public function getUpcomings($id){
         $project = Project::where('id',$id)->with('code')->first();
-        return ($project->code->upcomings) ? $project->code->upcomings : $project->code->upcomings;
+        return $project->code->upcomings;
     }
     public function index()
     {
@@ -33,7 +33,6 @@ class UpcomingController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $upcoming = new Upcoming;
         $upcoming->fill($request->input());
         $upcoming->save();

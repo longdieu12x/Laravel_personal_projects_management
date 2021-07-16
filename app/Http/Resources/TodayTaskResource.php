@@ -20,7 +20,7 @@ class TodayTaskResource extends JsonResource
             'completed' => $this->completed,
             'approved' => $this->approved,
             'taskId' => $this->taskId,
-            'code' => $this->code->qr_code,
+            'code' => $this->code->id,
         ];
     }
 }
